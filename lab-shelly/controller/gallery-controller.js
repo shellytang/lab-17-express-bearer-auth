@@ -2,7 +2,7 @@
 
 const debug = require('debug')('cfgram:gallery-controller');
 const Promise = require('bluebird');
-const createError = require('http-errors');
+// const createError = require('http-errors');
 const Gallery = require('../model/gallery');
 
 module.exports = exports = {};
@@ -32,8 +32,11 @@ exports.updateGallery = function(id, putGallery) {
 
 };
 
-exports.deleteGallery = function() {
+exports.deleteGallery = function(id) {
   debug('#deleteGallery');
 
+  return Gallery.findByIdAndRemove(id)
+  .then(gallery => Promise.resolve(gallery))
+  .catch(err => Promise.reject(err)); //create 404 error for not found?
 
 };

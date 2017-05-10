@@ -7,7 +7,6 @@ const Promise = require('bluebird');
 const createError = require('http-errors');
 const User = require('../model/user');
 
-
 module.exports = exports = {};
 
 exports.createAccount = function(user, password) {
