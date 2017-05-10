@@ -18,15 +18,7 @@ exports.createGallery = function(user) {
 exports.fetchGallery = function(id) {
   debug('#fetchGallery');
 
-  Gallery.findById(id)
-  .then(gallery => {
-    if(gallery.userId.toString() !== id.toString()) {
-      return createError(401, 'Invalid user');
-    }
-  })
+  return Gallery.findById(id)
   .then(gallery => Promise.resolve(gallery))
-  .catch(err => Promise.reject(err));
-
-  // .catch(err => Promise.reject(createError(401, 'Invalid user'));
-
+  .catch(err => Promise.reject(err)); //create 404 user not found error?
 };
