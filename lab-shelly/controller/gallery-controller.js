@@ -22,3 +22,18 @@ exports.fetchGallery = function(id) {
   .then(gallery => Promise.resolve(gallery))
   .catch(err => Promise.reject(err)); //create 404 user not found error?
 };
+
+exports.updateGallery = function(id, putGallery) {
+  debug('#updateGallery');
+
+  return Gallery.findByIdAndUpdate(id, {name: putGallery.name, mood: putGallery.mood}, {new: true})
+  .then(gallery => Promise.resolve(gallery))
+  .catch(err => Promise.reject(err)); //create 404 user not found error?
+
+};
+
+exports.deleteGallery = function() {
+  debug('#deleteGallery');
+
+
+};

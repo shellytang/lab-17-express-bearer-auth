@@ -11,9 +11,6 @@ module.exports = function(router) {
   router.post('/gallery', bearerAuth, (req, res) => {
     debug('#POST /api/gallery');
 
-    console.log('what is here: ', req.body);
-    console.log('WHAT is _id: ', req.user._id);
-
     req.body.userId = req.user._id;
 
     galleryController.createGallery(req.body)
@@ -27,15 +24,8 @@ module.exports = function(router) {
   router.get('/gallery/:id', bearerAuth, (req, res) => {
     debug('#GET /api/gallery/:id');
 
-    console.log('headers', req.headers);
-
     galleryController.fetchGallery(req.params.id)
     .then(gallery => {
-
-      console.log('gallery in routes!', gallery);
-      console.log('what is galleryuserid ', gallery.userId);
-      console.log('waht is userid ', req.user._id);
-      
       if(gallery.userId.toString() !== req.user._id.toString()) {
         return createError(401, 'Invalid user');
       }
@@ -44,6 +34,26 @@ module.exports = function(router) {
     .catch(err => res.status(err.status).send(err.message));
   });
 
-  return router;
+  router.put('/gallery/:id', bearerAuth, (req, res) => {
+    debug('#PUT /api/gallery/:id');
 
+    console.log('what is in body ', req.body);
+    let putGallery = req.body;
+    
+    galleryController.updateGallery(req.params.id, putGallery)
+    .then(gallery => {
+      if(gallery.userId.toString() !== req.user._id.toString()) {
+        return createError(401, 'Invalid user');
+      }
+      res.json(gallery);
+    })
+    .catch(err => res.status(err.status).send(err.message));
+  });
+
+  // router.delete('/gallery/:id', bearerAuth, (req, res) => {
+  //   debug('#DELETE /api/gallery/:id');
+  //
+  // });
+
+  return router;
 };
