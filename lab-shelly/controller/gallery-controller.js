@@ -11,7 +11,7 @@ exports.createGallery = function(user) {
 
   debug('#createGallery');
   return new Gallery(user).save()
-  .then(() => user)
+  .then(gallery => gallery)
   .catch(err => Promise.reject(err));
 };
 
@@ -20,7 +20,7 @@ exports.fetchGallery = function(id) {
 
   return Gallery.findById(id)
   .then(gallery => Promise.resolve(gallery))
-  .catch(err => Promise.reject(err));  
+  .catch(err => Promise.reject(err));
 };
 
 exports.updateGallery = function(id, putGallery) {
