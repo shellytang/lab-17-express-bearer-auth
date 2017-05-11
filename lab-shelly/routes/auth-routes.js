@@ -1,7 +1,5 @@
 'use strict';
 
-'use strict';
-
 const debug = require('debug')('cfgram:auth-routes');
 const basicAuth = require('../lib/basic-auth-middleware');
 const authController = require('../controller/auth-controller');
@@ -17,15 +15,15 @@ module.exports = function(router) {
 
     authController.createAccount(req.body, tempPassword)
     .then(token => res.json(token))
-    .catch(err => res.status(err.status).send(err));
+    .catch(err => res.status(err.status).send(err.mesage));
   });
 
   router.get('/signin', basicAuth, (req, res) => {
     debug('GET /signin');
-    
+
     authController.fetchAccount(req.auth)
     .then(token => res.json(token))
-    .catch(err => res.status(err.status).send(err));
+    .catch(err => res.status(err.status).send(err.message));
   });
   return router;
 };

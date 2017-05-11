@@ -1,7 +1,5 @@
 'use strict';
 
-'use strict';
-
 const debug = require('debug')('cfgram:error-middleware');
 const createError = require('http-errors');
 

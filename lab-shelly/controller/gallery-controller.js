@@ -2,7 +2,7 @@
 
 const debug = require('debug')('cfgram:gallery-controller');
 const Promise = require('bluebird');
-// const createError = require('http-errors');
+const createError = require('http-errors');
 const Gallery = require('../model/gallery');
 
 module.exports = exports = {};
@@ -20,7 +20,7 @@ exports.fetchGallery = function(id) {
 
   return Gallery.findById(id)
   .then(gallery => Promise.resolve(gallery))
-  .catch(err => Promise.reject(err)); //create 404 user not found error?
+  .catch(err => Promise.reject(err));  
 };
 
 exports.updateGallery = function(id, putGallery) {
@@ -28,8 +28,7 @@ exports.updateGallery = function(id, putGallery) {
 
   return Gallery.findByIdAndUpdate(id, {name: putGallery.name, mood: putGallery.mood}, {new: true})
   .then(gallery => Promise.resolve(gallery))
-  .catch(err => Promise.reject(err)); //create 404 user not found error?
-
+  .catch(err => Promise.reject(err));
 };
 
 exports.deleteGallery = function(id) {
@@ -37,6 +36,5 @@ exports.deleteGallery = function(id) {
 
   return Gallery.findByIdAndRemove(id)
   .then(gallery => Promise.resolve(gallery))
-  .catch(err => Promise.reject(err)); //create 404 error for not found?
-
+  .catch(err => Promise.reject(createError(404, 'Not found')));
 };

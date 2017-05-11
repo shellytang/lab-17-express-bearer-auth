@@ -1,7 +1,5 @@
 'use strict';
 
-'use strict';
-
 const debug = require('debug')('cfgram:auth-controller');
 const Promise = require('bluebird');
 const createError = require('http-errors');
@@ -19,8 +17,8 @@ exports.createAccount = function(user, password) {
   return newUser.generatePasswordHash(password)
   .then(user => user.save())
   .then(user => user.generateToken())
-  // .then(token => Promise.resolve(token))
-  .catch(err => Promise.reject(err));
+  .then(token => token)
+  .catch(err => Promise.reject(createError(400, 'Bad request')));
 };
 
 exports.fetchAccount = function(checkUser) {
@@ -28,6 +26,6 @@ exports.fetchAccount = function(checkUser) {
   return User.findOne({username: checkUser.username})
   .then(user => user.comparePasswordHash(checkUser.password))
   .then(user => user.generateToken())
-  // .then(token => Promise.resolve(token))
-  .catch(err => Promise.reject(err));
+  .then(token => token)
+  .catch(err => Promise.reject(createError(401, 'Not authorized')));
 };
