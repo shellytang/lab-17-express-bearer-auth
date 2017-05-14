@@ -12,23 +12,34 @@ exports.createGallery = function(user) {
   debug('#createGallery');
   return new Gallery(user).save()
   .then(gallery => gallery)
-  .catch(err => Promise.reject(err));
+  .catch(() => Promise.reject(createError(400, 'Invalid body')));
 };
 
-exports.fetchGallery = function(id) {
+exports.fetchGallery = function(id, userId) {
   debug('#fetchGallery');
 
   return Gallery.findById(id)
-  .then(gallery => Promise.resolve(gallery))
-  .catch(err => Promise.reject(err));
+  .then(gallery => {
+    if (gallery.userId.toString() !== userId.toString()) {
+      return Promise.reject(createError(401, 'Invalid user'));
+    }
+    return Promise.resolve(gallery);
+  })
+  .catch(() => Promise.reject(createError(404, 'Gallery not found')));
 };
 
-exports.updateGallery = function(id, putGallery) {
+exports.updateGallery = function(id, galleryBody, userId) {
   debug('#updateGallery');
+  if (!galleryBody.name || !galleryBody.desc) return Promise.reject(createError(400, 'Invalid body'));
 
-  return Gallery.findByIdAndUpdate(id, {name: putGallery.name, mood: putGallery.mood}, {new: true})
-  .then(gallery => Promise.resolve(gallery))
-  .catch(err => Promise.reject(err));
+  return Gallery.findByIdAndUpdate(id, galleryBody, {new: true})
+  .then(gallery => {
+    if (gallery.userId.toString() !== userId.toString()) {
+      return Promise.reject(createError(401, 'Invalid user'));
+    }
+    return Promise.resolve(gallery);
+  })
+  .catch(() => Promise.reject(createError(404, 'Gallery not found')));
 };
 
 exports.deleteGallery = function(id) {
